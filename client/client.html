@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Maxwell Chu's IGME 430 Project 1 Prototype</title>
+        <link rel="stylesheet" type="text/css" href="/style.css">
+        <script>
+            const handleResponse = async(response) => {
+                const content = document.querySelector('#content');
+                switch(response.status) {
+                    case 200:
+                        content.innerHTML = `<b>Success</b>`;
+                        break;
+                    case 201:
+                        content.innerHTML = `<b>Created</b>`;
+                        break;
+                    case 204:
+                        content.innerHTML = `<b>Updated (No Content)</b>`;
+                        break;
+                    case 400:
+                        content.innerHTML = `<b>Bad Request</b>`;
+                        break;
+                    case 404:
+                        content.innerHTML = `<b>Resource Not Found</b>`;
+                        break;
+                    default:
+                        content.innerHTML = `Error code not implemented by client.`;
+                        break;
+                }
+                let obj = await response.json();
+                if(obj.message) {
+                    content.innerHTML += `<p>Go to <a href="/createForm">/createForm</a> to see your created form.</p>`;
+                }
+            };
+            const create = async (createForm) => {
+                const actionForm = createForm.getAttribute('action');
+                const methodForm = createForm.getAttribute('method');
+                const oneQ = createForm.querySelector('#one');
+                const twoQ = createForm.querySelector('#one');
+                const threeQ = createForm.querySelector('#one');
+                const fourQ = createForm.querySelector('#one');
+                const fiveQ = createForm.querySelector('#one');
+                const formData = `question1=${oneQ.value}&question2=${twoQ.value}&question3=${threeQ.value}&question4=${fourQ.value}&question5=${fiveQ.value}`;
+                let response = await fetch(actionForm, {
+                    method: methodForm,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept': 'application/json',
+                    },
+                    body: formData,
+                });
+                handleResponse(response);
+            };
+            const init = () => {
+                const createForm = document.querySelector('#createForm');
+                const createFormat = (e) => {
+                    e.preventDefault();
+                    create(createForm);
+                    return false;
+                }
+                createForm.addEventListener('submit', createFormat);
+            };
+            window.onload = init;
+        </script>
+    </head>
+    <body>
+        <h3>Create a Form:</h3>
+        <form id="createForm" action="/createForm" method="post">
+            <label for="question1">Question 1: </label>
+            <input id="one" type="text" name="question1" size="150"/>
+            <br>
+            <label for="question2">Question 2: </label>
+            <input id="two" type="text" name="question2" size="150"/>
+            <br>
+            <label for="question3">Question 3: </label>
+            <input id="three" type="text" name="question3" size="150"/>
+            <br>
+            <label for="question4">Question 4: </label>
+            <input id="four" type="text" name="question4" size="150"/>
+            <br>
+            <label for="question5">Question 5: </label>
+            <input id="five" type="text" name="question5" size="150"/>
+            <br>
+            <input type="submit" value="Submit Questions"/>
+        </form>
+        <section id="content">
+        </section>
+    </body>
+</html>
