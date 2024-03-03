@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Maxwell Chu IGME 430 Project 1</title>
+        <link rel="stylesheet" type="text/css" href="/style.css">
+        <script>
+            const handleResponse = async (response, method, action) => {
+                if(method === 'get') {
+                    const content = document.querySelector('#answerContent');
+                    let obj = await response.json();
+                    if(action === '/getQuestions') {
+                        const label1 = document.querySelector('#label1');
+                        let jsonString1q = JSON.stringify(obj["questions"]["undefined"]["q1"]);
+                        label1.innerHTML = `${JSON.parse(jsonString1q)}`;
+
+                        const label2 = document.querySelector('#label2');
+                        let jsonString2q = JSON.stringify(obj["questions"]["undefined"]["q2"]);
+                        label2.innerHTML = `${JSON.parse(jsonString2q)}`;
+
+                        const label3 = document.querySelector('#label3');
+                        let jsonString3q = JSON.stringify(obj["questions"]["undefined"]["q3"]);
+                        label3.innerHTML = `${JSON.parse(jsonString3q)}`;
+
+                        const label4 = document.querySelector('#label4');
+                        let jsonString4q = JSON.stringify(obj["questions"]["undefined"]["q4"]);
+                        label4.innerHTML = `${JSON.parse(jsonString4q)}`;
+
+                        const label5 = document.querySelector('#label5');
+                        let jsonString5q = JSON.stringify(obj["questions"]["undefined"]["q5"]);
+                        label5.innerHTML = `${JSON.parse(jsonString5q)}`;
+                    } else if(action === '/getAnswers') {
+                        if(obj["answers"]["undefined"] != null) {
+                            content.innerHTML = `<p>These are the answers you have submitted:</p>
+                                <p>1. ${obj["answers"]["undefined"]["a1"][obj["answers"]["undefined"]["a1"].length - 1]}</p>
+                                <p>2. ${obj["answers"]["undefined"]["a2"][obj["answers"]["undefined"]["a2"].length - 1]}</p>
+                                <p>3. ${obj["answers"]["undefined"]["a3"][obj["answers"]["undefined"]["a3"].length - 1]}</p>
+                                <p>4. ${obj["answers"]["undefined"]["a4"][obj["answers"]["undefined"]["a4"].length - 1]}</p>
+                                <p>5. ${obj["answers"]["undefined"]["a5"][obj["answers"]["undefined"]["a5"].length - 1]}</p>`;
+                        }
+                    }
+                } else {
+                    const goBack = document.querySelector('#goBack');
+                    if(response.status === 201 || response.status === 204) {
+                        goBack.innerHTML = `<p>Click <a href="/">this link</a> to go back.</p>`;
+                    } else {
+                        goBack.innerHTML = `<p>Please make sure all answers are filled out.</p>`;
+                    }
+                }
+            };
+            const sendAnswers = async (answerForm) => {
+                const answerAction = answerForm.getAttribute('action');
+                const answerMethod = answerForm.getAttribute('method');
+
+                const answerField1 = answerForm.querySelector('#aField1');
+                const answerField2 = answerForm.querySelector('#aField2');
+                const answerField3 = answerForm.querySelector('#aField3');
+                const answerField4 = answerForm.querySelector('#aField4');
+                const answerField5 = answerForm.querySelector('#aField5');
+
+                const formData = `a1=${answerField1.value}&a2=${answerField2.value}&a3=${answerField3.value}&a4=${answerField4.value}&a5=${answerField5.value}`;
+
+                let response = await fetch(answerAction, {
+                    method: answerMethod,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept': 'application/json',
+                    },
+                    body: formData,
+                });
+
+                handleResponse(response, null);
+            };
+            const requestUpdate = async (info) => {
+                let action;
+                if(info === 'question') {
+                    action = '/getQuestions';
+                } else if(info === 'answer') {
+                    action = '/getAnswers';
+                }
+                const method = 'get';
+                let response = await fetch(action, {
+                    method,
+                    headers: { 'Accept': 'application/json' },
+                });
+                handleResponse(response, method, action);
+            };
+            const getQuestions = (e) => {
+                e.preventDefault();
+                requestUpdate('question');
+                return false;
+            };
+            const getAnswers = (e) => {
+                e.preventDefault();
+                requestUpdate('answer');
+                return false;
+            }
+            const init = () => {
+                const answerForm = document.querySelector('#answerForm');
+                const addAnswers = (e) => {
+                    e.preventDefault();
+                    sendAnswers(answerForm);
+                    return false;
+                }
+                answerForm.addEventListener('submit', addAnswers);
+                answerForm.addEventListener('submit', getAnswers);
+            };
+            window.onload = init;
+            window.addEventListener('load', getQuestions);
+            window.addEventListener('load', getAnswers);
+        </script>
+    </head>
+    <body>
+        <section id="Form">
+            <h1>Form:</h1>
+            <form id="answerForm" action="/addAnswers" method="post">
+                <label for="answer1" id="label1"></label>
+                <input id="aField1" type="text" name="a1"/>
+                <br>
+                <label for="answer2" id="label2"></label>
+                <input id="aField2" type="text" name="a2"/>
+                <br>
+                <label for="answer3" id="label3"></label>
+                <input id="aField3" type="text" name="a3"/>
+                <br>
+                <label for="answer4" id="label4"></label>
+                <input id="aField4" type="text" name="a4"/>
+                <br>
+                <label for="answer5" id="label5"></label>
+                <input id="aField5" type="text" name="a5"/>
+                <br>
+                <input type="submit" value="Submit Answers!"/>
+            </form>
+        </section>
+        <section id="answerContent">
+        </section>
+        <section id="goBack">
+        </section>
+    </body>
+</html>

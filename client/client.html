@@ -1,88 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Maxwell Chu's IGME 430 Project 1 Prototype</title>
+        <title>Maxwell Chu IGME 430 Project 1</title>
         <link rel="stylesheet" type="text/css" href="/style.css">
         <script>
-            const handleResponse = async(response) => {
-                const content = document.querySelector('#content');
-                switch(response.status) {
-                    case 200:
-                        content.innerHTML = `<b>Success</b>`;
-                        break;
-                    case 201:
-                        content.innerHTML = `<b>Created</b>`;
-                        break;
-                    case 204:
-                        content.innerHTML = `<b>Updated (No Content)</b>`;
-                        break;
-                    case 400:
-                        content.innerHTML = `<b>Bad Request</b>`;
-                        break;
-                    case 404:
-                        content.innerHTML = `<b>Resource Not Found</b>`;
-                        break;
-                    default:
-                        content.innerHTML = `Error code not implemented by client.`;
-                        break;
-                }
-                let obj = await response.json();
-                if(obj.message) {
-                    content.innerHTML += `<p>Go to <a href="/createForm">/createForm</a> to see your created form.</p>`;
+            let questionField1, questionField2, questionField3, questionField4, questionField5;
+            let jsonString1q, jsonString2q, jsonString3q, jsonString4q, jsonString5q;
+
+            const handleResponse = async (response, method, action) => {
+                const content = document.querySelector('#questionContent');
+                if(method === 'get') {
+                    let obj = await response.json();
+                    if(action === '/getQuestions') {
+                        if(obj["questions"]["undefined"] != null) {
+                            jsonString1q = JSON.stringify(obj["questions"]["undefined"]["q1"]);
+                            jsonString2q = JSON.stringify(obj["questions"]["undefined"]["q2"]);
+                            jsonString3q = JSON.stringify(obj["questions"]["undefined"]["q3"]);
+                            jsonString4q = JSON.stringify(obj["questions"]["undefined"]["q4"]);
+                            jsonString5q = JSON.stringify(obj["questions"]["undefined"]["q5"]);
+
+                            questionField1.value = JSON.parse(jsonString1q);
+                            questionField2.value = JSON.parse(jsonString2q);
+                            questionField3.value = JSON.parse(jsonString3q);
+                            questionField4.value = JSON.parse(jsonString4q);
+                            questionField5.value = JSON.parse(jsonString5q);
+                        }
+                    } else if(action === '/getAnswers') {
+                        if(obj["answers"]["undefined"] != null) {
+                            content.innerHTML = `<p>Here are the results from completing the form:</p>
+                                <p>${JSON.parse(jsonString1q)}</p>
+                                <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a1"]))}</p>
+                                <br>
+                                <p>${JSON.parse(jsonString2q)}</p>
+                                <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a2"]))}</p>
+                                <br>
+                                <p>${JSON.parse(jsonString3q)}</p>
+                                <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a3"]))}</p>
+                                <br>
+                                <p>${JSON.parse(jsonString4q)}</p>
+                                <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a4"]))}</p>
+                                <br>
+                                <p>${JSON.parse(jsonString5q)}</p>
+                                <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a5"]))}</p>`;
+                        }
+                    }
+                } else {
+                    const gotoForm = document.querySelector('#gotoForm');
+                    if(response.status === 201 || response.status === 204) {
+                        gotoForm.innerHTML = `<p>Click <a href="/createdForm">this link</a> to see the form.</p>`;
+                    } else {
+                        gotoForm.innerHTML = `<p>Please review all of your questions.</p>`;
+                    }
                 }
             };
-            const create = async (createForm) => {
-                const actionForm = createForm.getAttribute('action');
-                const methodForm = createForm.getAttribute('method');
-                const oneQ = createForm.querySelector('#one');
-                const twoQ = createForm.querySelector('#one');
-                const threeQ = createForm.querySelector('#one');
-                const fourQ = createForm.querySelector('#one');
-                const fiveQ = createForm.querySelector('#one');
-                const formData = `question1=${oneQ.value}&question2=${twoQ.value}&question3=${threeQ.value}&question4=${fourQ.value}&question5=${fiveQ.value}`;
-                let response = await fetch(actionForm, {
-                    method: methodForm,
+            const sendQuestions = async (questionForm) => {
+                const questionAction = questionForm.getAttribute('action');
+                const questionMethod = questionForm.getAttribute('method');
+
+                const formData = `q1=${questionField1.value}&q2=${questionField2.value}&q3=${questionField3.value}&q4=${questionField4.value}&q5=${questionField5.value}`;
+
+                let response = await fetch(questionAction, {
+                    method: questionMethod,
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                         'Accept': 'application/json',
                     },
                     body: formData,
                 });
+                
                 handleResponse(response);
             };
+            const requestUpdate = async (info) => {
+                let action;
+                if(info === 'question') {
+                    action = '/getQuestions';
+                } else if(info === 'answer') {
+                    action = '/getAnswers';
+                }
+                const method = 'get';
+                let response = await fetch(action, {
+                    method,
+                    headers: { 'Accept': 'application/json' },
+                });
+                handleResponse(response, method, action);
+            };
+            const getQuestions = (e) => {
+                e.preventDefault();
+                requestUpdate('question');
+                return false;
+            };
+            const getAnswers = (e) => {
+                e.preventDefault();
+                requestUpdate('answer');
+                return false;
+            };
             const init = () => {
-                const createForm = document.querySelector('#createForm');
-                const createFormat = (e) => {
+                const questionForm = document.querySelector('#questionForm');
+                questionField1 = questionForm.querySelector('#qField1');
+                questionField2 = questionForm.querySelector('#qField2');
+                questionField3 = questionForm.querySelector('#qField3');
+                questionField4 = questionForm.querySelector('#qField4');
+                questionField5 = questionForm.querySelector('#qField5');
+                const addQuestions = (e) => {
                     e.preventDefault();
-                    create(createForm);
+                    sendQuestions(questionForm);
                     return false;
                 }
-                createForm.addEventListener('submit', createFormat);
+                questionForm.addEventListener('submit', addQuestions);
             };
             window.onload = init;
+            window.addEventListener('load', getQuestions);
+            window.addEventListener('load', getAnswers);
         </script>
     </head>
     <body>
-        <h3>Create a Form:</h3>
-        <form id="createForm" action="/createForm" method="post">
-            <label for="question1">Question 1: </label>
-            <input id="one" type="text" name="question1" size="150"/>
-            <br>
-            <label for="question2">Question 2: </label>
-            <input id="two" type="text" name="question2" size="150"/>
-            <br>
-            <label for="question3">Question 3: </label>
-            <input id="three" type="text" name="question3" size="150"/>
-            <br>
-            <label for="question4">Question 4: </label>
-            <input id="four" type="text" name="question4" size="150"/>
-            <br>
-            <label for="question5">Question 5: </label>
-            <input id="five" type="text" name="question5" size="150"/>
-            <br>
-            <input type="submit" value="Submit Questions"/>
-        </form>
-        <section id="content">
+        <section id="Form">
+            <h1>Create a Form:</h1>
+            <form id="questionForm" action="/addQuestions" method="post">
+                <label for="question1">Question 1: </label>
+                <input id="qField1" type="text" name="q1"/>
+                <br>
+                <label for="question2">Question 2: </label>
+                <input id="qField2" type="text" name="q2"/>
+                <br>
+                <label for="question3">Question 3: </label>
+                <input id="qField3" type="text" name="q3"/>
+                <br>
+                <label for="question4">Question 4: </label>
+                <input id="qField4" type="text" name="q4"/>
+                <br>
+                <label for="question5">Question 5: </label>
+                <input id="qField5" type="text" name="q5"/>
+                <br>
+                <input type="submit" value="Submit Questions!"/>
+            </form>
+        </section>
+        <section id="questionContent">
+        </section>
+        <section id="gotoForm">
         </section>
     </body>
 </html>
