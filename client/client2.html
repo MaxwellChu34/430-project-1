@@ -31,11 +31,11 @@
                     } else if(action === '/getAnswers') {
                         if(obj["answers"]["undefined"] != null) {
                             content.innerHTML = `<p>These are the answers you have submitted:</p>
-                                <p>1. ${obj["answers"]["undefined"]["a1"][obj["answers"]["undefined"]["a1"].length - 1]}</p>
-                                <p>2. ${obj["answers"]["undefined"]["a2"][obj["answers"]["undefined"]["a2"].length - 1]}</p>
-                                <p>3. ${obj["answers"]["undefined"]["a3"][obj["answers"]["undefined"]["a3"].length - 1]}</p>
-                                <p>4. ${obj["answers"]["undefined"]["a4"][obj["answers"]["undefined"]["a4"].length - 1]}</p>
-                                <p>5. ${obj["answers"]["undefined"]["a5"][obj["answers"]["undefined"]["a5"].length - 1]}</p>`;
+                            <p>1. ${obj["answers"]["undefined"]["a1"][obj["answers"]["undefined"]["a1"].length - 1]}</p>
+                            <p>2. ${obj["answers"]["undefined"]["a2"][obj["answers"]["undefined"]["a2"].length - 1]}</p>
+                            <p>3. ${obj["answers"]["undefined"]["a3"][obj["answers"]["undefined"]["a3"].length - 1]}</p>
+                            <p>4. ${obj["answers"]["undefined"]["a4"][obj["answers"]["undefined"]["a4"].length - 1]}</p>
+                            <p>5. ${obj["answers"]["undefined"]["a5"][obj["answers"]["undefined"]["a5"].length - 1]}</p>`;
                         }
                     }
                 } else {
@@ -78,10 +78,7 @@
                     action = '/getAnswers';
                 }
                 const method = 'get';
-                let response = await fetch(action, {
-                    method,
-                    headers: { 'Accept': 'application/json' },
-                });
+                let response = await fetch(action, {method, headers: { 'Accept': 'application/json' }});
                 handleResponse(response, method, action);
             };
             const getQuestions = (e) => {

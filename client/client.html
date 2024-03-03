@@ -6,7 +6,6 @@
         <script>
             let questionField1, questionField2, questionField3, questionField4, questionField5;
             let jsonString1q, jsonString2q, jsonString3q, jsonString4q, jsonString5q;
-
             const handleResponse = async (response, method, action) => {
                 const content = document.querySelector('#questionContent');
                 if(method === 'get') {
@@ -18,7 +17,6 @@
                             jsonString3q = JSON.stringify(obj["questions"]["undefined"]["q3"]);
                             jsonString4q = JSON.stringify(obj["questions"]["undefined"]["q4"]);
                             jsonString5q = JSON.stringify(obj["questions"]["undefined"]["q5"]);
-
                             questionField1.value = JSON.parse(jsonString1q);
                             questionField2.value = JSON.parse(jsonString2q);
                             questionField3.value = JSON.parse(jsonString3q);
@@ -28,20 +26,20 @@
                     } else if(action === '/getAnswers') {
                         if(obj["answers"]["undefined"] != null) {
                             content.innerHTML = `<p>Here are the results from completing the form:</p>
-                                <p>${JSON.parse(jsonString1q)}</p>
-                                <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a1"]))}</p>
-                                <br>
-                                <p>${JSON.parse(jsonString2q)}</p>
-                                <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a2"]))}</p>
-                                <br>
-                                <p>${JSON.parse(jsonString3q)}</p>
-                                <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a3"]))}</p>
-                                <br>
-                                <p>${JSON.parse(jsonString4q)}</p>
-                                <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a4"]))}</p>
-                                <br>
-                                <p>${JSON.parse(jsonString5q)}</p>
-                                <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a5"]))}</p>`;
+                            <p>${JSON.parse(jsonString1q)}</p>
+                            <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a1"]))}</p>
+                            <br>
+                            <p>${JSON.parse(jsonString2q)}</p>
+                            <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a2"]))}</p>
+                            <br>
+                            <p>${JSON.parse(jsonString3q)}</p>
+                            <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a3"]))}</p>
+                            <br>
+                            <p>${JSON.parse(jsonString4q)}</p>
+                            <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a4"]))}</p>
+                            <br>
+                            <p>${JSON.parse(jsonString5q)}</p>
+                            <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a5"]))}</p>`;
                         }
                     }
                 } else {
@@ -56,9 +54,7 @@
             const sendQuestions = async (questionForm) => {
                 const questionAction = questionForm.getAttribute('action');
                 const questionMethod = questionForm.getAttribute('method');
-
                 const formData = `q1=${questionField1.value}&q2=${questionField2.value}&q3=${questionField3.value}&q4=${questionField4.value}&q5=${questionField5.value}`;
-
                 let response = await fetch(questionAction, {
                     method: questionMethod,
                     headers: {
@@ -67,7 +63,6 @@
                     },
                     body: formData,
                 });
-                
                 handleResponse(response);
             };
             const requestUpdate = async (info) => {
@@ -78,10 +73,7 @@
                     action = '/getAnswers';
                 }
                 const method = 'get';
-                let response = await fetch(action, {
-                    method,
-                    headers: { 'Accept': 'application/json' },
-                });
+                let response = await fetch(action, {method, headers: { 'Accept': 'application/json' }});
                 handleResponse(response, method, action);
             };
             const getQuestions = (e) => {

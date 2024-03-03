@@ -64,16 +64,16 @@ const addAnswers = (request, response, body) => {
   return respondJSONMeta(request, response, responseCode);
 };
 
-const getQuestions = (request, response) => {
-  const responseJSON = { questions };
+const getData = (request, response, filter) => {
+  let responseJSON;
+  if (filter === 'question') {
+    responseJSON = { questions };
+  } else if (filter === 'answer') {
+    responseJSON = { answers };
+  }
   return respondJSON(request, response, 200, responseJSON);
 };
 const getQuestionsMeta = (request, response) => respondJSONMeta(request, response, 200);
-
-const getAnswers = (request, response) => {
-  const responseJSON = { answers };
-  return respondJSON(request, response, 200, responseJSON);
-};
 const getAnswersMeta = (request, response) => respondJSONMeta(request, response, 200);
 
 const notFound = (request, response) => {
@@ -90,9 +90,8 @@ const notFoundMeta = (request, response) => {
 module.exports = {
   addQuestions,
   addAnswers,
-  getQuestions,
+  getData,
   getQuestionsMeta,
-  getAnswers,
   getAnswersMeta,
   notFound,
   notFoundMeta,

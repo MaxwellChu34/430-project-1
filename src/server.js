@@ -33,7 +33,7 @@ const handlePost = (request, response, parsedUrl) => {
 
 const handleHead = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/getQuestions') {
-    jsonHandler.getQuestionsMeta(request, response);
+    jsonHandler.getDataMeta(request, response);
   } else if (parsedUrl.pathname === '/getAnswers') {
     jsonHandler.getAnswersMeta(request, response);
   } else {
@@ -49,9 +49,9 @@ const handleGet = (request, response, parsedUrl) => {
   } else if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
   } else if (parsedUrl.pathname === '/getQuestions') {
-    jsonHandler.getQuestions(request, response);
+    jsonHandler.getData(request, response, 'question');
   } else if (parsedUrl.pathname === '/getAnswers') {
-    jsonHandler.getAnswers(request, response);
+    jsonHandler.getData(request, response, 'answer');
   } else {
     jsonHandler.notFound(request, response);
   }
