@@ -32,7 +32,7 @@
                     }
                 }
             };
-            const sendAnswers = async (answerForm) => { //D.R.Y. this
+            const sendAnswers = async (answerForm) => {
                 const answerAction = answerForm.getAttribute('action');
                 const answerMethod = answerForm.getAttribute('method');
                 let formData = ``;
@@ -87,19 +87,19 @@
         <section id="Form">
             <h1>Form:</h1>
             <form id="answerForm" action="/addAnswers" method="post">
-                <label for="answer1" id="label1"></label>
+                <label for="a1" id="label1"></label>
                 <input id="aField1" type="text" name="a1"/>
                 <br>
-                <label for="answer2" id="label2"></label>
+                <label for="a2" id="label2"></label>
                 <input id="aField2" type="text" name="a2"/>
                 <br>
-                <label for="answer3" id="label3"></label>
+                <label for="a3" id="label3"></label>
                 <input id="aField3" type="text" name="a3"/>
                 <br>
-                <label for="answer4" id="label4"></label>
+                <label for="a4" id="label4"></label>
                 <input id="aField4" type="text" name="a4"/>
                 <br>
-                <label for="answer5" id="label5"></label>
+                <label for="a5" id="label5"></label>
                 <input id="aField5" type="text" name="a5"/>
                 <br>
                 <input type="submit" value="Submit Answers!"/>

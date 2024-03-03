@@ -1,0 +1,65 @@
+body {
+    background-color: lavender;
+    font-family: Roboto, sans-serif;
+    margin: auto;
+    width: 80%;
+    display: grid;
+    grid-template-columns: 50% auto;
+    column-gap: 20px;
+}
+
+h1, #qGroup, #gotoForm, #intro, #results {
+    background-color: white;
+    outline: solid lightgray 1px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+h1, #gotoForm {
+    border-top: solid indigo 10px;
+    font-weight: lighter;
+}
+
+#qGroup:focus-within {
+    border-left: solid dodgerblue 5px;
+}
+
+input[type=text] {
+    width: 90%;
+}
+input[type=text]:hover, input[type=text]:focus {
+    background-color: whitesmoke;
+}
+
+input[type=submit] {
+    background-color: indigo;
+    color: white;
+    border: indigo;
+    border-radius: 10px;
+    padding: 15px;
+}
+input[type=submit]:hover {
+    background-color: rebeccapurple;
+    border: rebeccapurple;
+}
+input[type=submit]:active {
+    background-color: mediumpurple;
+    border: mediumpurple;
+}
+
+#gotoForm {
+    margin-top: 20px;
+    text-align: center;
+    height: -5vw;
+    padding-top: 0px;
+    padding-bottom: 10px;
+}
+
+#results p {
+    overflow: scroll;
+    min-width: 100%;
+    width: 0;
+    margin: 0px;
+    padding-bottom: 20px;
+}
