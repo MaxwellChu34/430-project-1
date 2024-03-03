@@ -4,42 +4,29 @@
         <title>Maxwell Chu IGME 430 Project 1</title>
         <link rel="stylesheet" type="text/css" href="/style.css">
         <script>
-            let questionField1, questionField2, questionField3, questionField4, questionField5;
-            let jsonString1q, jsonString2q, jsonString3q, jsonString4q, jsonString5q;
+            let questionForm = document.querySelector('#questionForm');
+            let jsonStringQ = [];
             const handleResponse = async (response, method, action) => {
                 const content = document.querySelector('#questionContent');
                 if(method === 'get') {
                     let obj = await response.json();
                     if(action === '/getQuestions') {
                         if(obj["questions"]["undefined"] != null) {
-                            jsonString1q = JSON.stringify(obj["questions"]["undefined"]["q1"]);
-                            jsonString2q = JSON.stringify(obj["questions"]["undefined"]["q2"]);
-                            jsonString3q = JSON.stringify(obj["questions"]["undefined"]["q3"]);
-                            jsonString4q = JSON.stringify(obj["questions"]["undefined"]["q4"]);
-                            jsonString5q = JSON.stringify(obj["questions"]["undefined"]["q5"]);
-                            questionField1.value = JSON.parse(jsonString1q);
-                            questionField2.value = JSON.parse(jsonString2q);
-                            questionField3.value = JSON.parse(jsonString3q);
-                            questionField4.value = JSON.parse(jsonString4q);
-                            questionField5.value = JSON.parse(jsonString5q);
+                            for(let i = 1; i <= 5; i++) {
+                                jsonStringQ.push(JSON.parse(JSON.stringify(obj["questions"]["undefined"][`q${i}`])));
+                                questionForm.querySelector(`#qField${i}`).value = jsonStringQ[i - 1];
+                            }
                         }
                     } else if(action === '/getAnswers') {
                         if(obj["answers"]["undefined"] != null) {
-                            content.innerHTML = `<p>Here are the results from completing the form:</p>
-                            <p>${JSON.parse(jsonString1q)}</p>
-                            <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a1"]))}</p>
-                            <br>
-                            <p>${JSON.parse(jsonString2q)}</p>
-                            <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a2"]))}</p>
-                            <br>
-                            <p>${JSON.parse(jsonString3q)}</p>
-                            <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a3"]))}</p>
-                            <br>
-                            <p>${JSON.parse(jsonString4q)}</p>
-                            <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a4"]))}</p>
-                            <br>
-                            <p>${JSON.parse(jsonString5q)}</p>
-                            <p>${JSON.parse(JSON.stringify(obj["answers"]["undefined"]["a5"]))}</p>`;
+                            content.innerHTML = `<p>Here are the results from completing the form:</p>`
+                            let jsonStringA = [];
+                            for(let i = 1; i <= 5; i++) {
+                                jsonStringA.push(JSON.parse(JSON.stringify(obj["answers"]["undefined"][`a${i}`])));
+                                content.innerHTML += `<p>${jsonStringQ[i - 1]}</p>`;
+                                content.innerHTML += `<p>${jsonStringA[i - 1]}</p>`;
+                                content.innerHTML += `<br>`;
+                            }
                         }
                     }
                 } else {
@@ -54,7 +41,12 @@
             const sendQuestions = async (questionForm) => {
                 const questionAction = questionForm.getAttribute('action');
                 const questionMethod = questionForm.getAttribute('method');
-                const formData = `q1=${questionField1.value}&q2=${questionField2.value}&q3=${questionField3.value}&q4=${questionField4.value}&q5=${questionField5.value}`;
+                let formData = ``;
+                let qFieldArray = [];
+                for(let i = 1; i <= 5; i++) {
+                    qFieldArray.push(`#qField${i}`);
+                    formData += `q${i}=${questionForm.querySelector(qFieldArray[i - 1]).value}&`;
+                }
                 let response = await fetch(questionAction, {
                     method: questionMethod,
                     headers: {
@@ -76,23 +68,14 @@
                 let response = await fetch(action, {method, headers: { 'Accept': 'application/json' }});
                 handleResponse(response, method, action);
             };
-            const getQuestions = (e) => {
+            const getData = (e) => {
                 e.preventDefault();
                 requestUpdate('question');
-                return false;
-            };
-            const getAnswers = (e) => {
-                e.preventDefault();
                 requestUpdate('answer');
                 return false;
             };
             const init = () => {
-                const questionForm = document.querySelector('#questionForm');
-                questionField1 = questionForm.querySelector('#qField1');
-                questionField2 = questionForm.querySelector('#qField2');
-                questionField3 = questionForm.querySelector('#qField3');
-                questionField4 = questionForm.querySelector('#qField4');
-                questionField5 = questionForm.querySelector('#qField5');
+                questionForm = document.querySelector('#questionForm');
                 const addQuestions = (e) => {
                     e.preventDefault();
                     sendQuestions(questionForm);
@@ -101,8 +84,7 @@
                 questionForm.addEventListener('submit', addQuestions);
             };
             window.onload = init;
-            window.addEventListener('load', getQuestions);
-            window.addEventListener('load', getAnswers);
+            window.addEventListener('load', getData);
         </script>
     </head>
     <body>
