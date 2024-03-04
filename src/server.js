@@ -8,23 +8,25 @@ const jsonHandler = require('./jsonResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
+//parseBody breaks down what is being posted to a json object
 const parseBody = (request, response, handler) => {
   const body = [];
-  request.on('error', (err) => {
+  request.on('error', (err) => { //If there's an error, this function ends abruptly
     console.dir(err);
     response.statusCode = 400;
     response.end();
   });
-  request.on('data', (chunk) => {
+  request.on('data', (chunk) => { //Every time theres something new, it will push into an array
     body.push(chunk);
   });
-  request.on('end', () => {
+  request.on('end', () => { //At the end of what is received, a new function is called with the parsed data
     const bodyString = Buffer.concat(body).toString();
     const bodyParams = query.parse(bodyString);
     handler(request, response, bodyParams);
   });
 };
 
+//handlePost takes care of two POST methods, adding either data to questions or answers
 const handlePost = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/addQuestions') {
     parseBody(request, response, jsonHandler.addQuestions);
@@ -33,9 +35,10 @@ const handlePost = (request, response, parsedUrl) => {
   }
 };
 
+//handleHead takes care of all HEAD methods, sending '200' response codes for getting questions or answers and '400' for anything else
 const handleHead = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/getQuestions') {
-    jsonHandler.getDataMeta(request, response);
+    jsonHandler.getQuestionsMeta(request, response);
   } else if (parsedUrl.pathname === '/getAnswers') {
     jsonHandler.getAnswersMeta(request, response);
   } else {
@@ -43,6 +46,10 @@ const handleHead = (request, response, parsedUrl) => {
   }
 };
 
+//handleGet takes care of all GET methods
+//This includes html and css pages
+//JSON data is received if the page wants questions and/or answers
+//Each of these pathnames can be put in the URL, anything else will result in notFound
 const handleGet = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
@@ -59,6 +66,7 @@ const handleGet = (request, response, parsedUrl) => {
   }
 };
 
+//onRequest determines if the method is POST, HEAD, or GET
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
   if (request.method === 'POST') {
@@ -70,6 +78,7 @@ const onRequest = (request, response) => {
   }
 };
 
+//createServer starts the server
 http.createServer(onRequest).listen(port, () => {
   console.log(`Listening on 127.0.0.1: ${port}`);
 });

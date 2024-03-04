@@ -6,11 +6,14 @@
         <script>
             /*The following Javascript is based off IGM-RichMedia-at-RIT/body-parse-example-done/client/client.html and /head-request-example-done/client/client.html. These two files were proficient examples as to how this HTML page can be interactive with the API server.*/
             let answerForm = document.querySelector('#answerForm');
+            //handleResponse is able to receive the json object from both get and post requests
             const handleResponse = async (response, method, action) => {
+                //For get requests, the page displays each question/answer if that json object isn't empty
                 if(method === 'get') {
                     const content = document.querySelector('#answerContent');
                     let obj = await response.json();
                     if(action === '/getQuestions') {
+                        //An array is created for all 5 questions that stores all 5 "question" values and sets them as the default value of each label
                         let jsonStringQ = [];
                         for(let i = 1; i <= 5; i++) {
                             jsonStringQ.push(JSON.parse(JSON.stringify(obj["questions"]["undefined"][`q${i}`])));
@@ -19,23 +22,25 @@
                     } else if(action === '/getAnswers') {
                         if(obj["answers"]["undefined"] != null) {
                             content.innerHTML = `<p>These are the answers you have submitted:</p>`;
-                            for(let i = 1; i <= 5; i++) {
+                            for(let i = 1; i <= 5; i++) { //In a display box on the right, each answer that was posted will display on this page too.
                                 content.innerHTML += `<p>${i}. ${obj["answers"]["undefined"][`a${i}`][obj["answers"]["undefined"][`a${i}`].length - 1]}</p>`;
                             }
                         }
                     }
-                } else {
+                } else { //For post requests, if all inputs have been filled a link to the form creation page is displayed
                     const goBack = document.querySelector('#goBack');
                     if(response.status === 201 || response.status === 204) {
                         goBack.innerHTML = `<p>Click <a href="/">this link</a> to go back.</p>`;
-                    } else {
+                    } else { //A text that tells the user to finish implementing is displayed if not
                         goBack.innerHTML = `<p>Please make sure all answers are filled out.</p>`;
                     }
                 }
             };
+            //sendAnswers is the main function behind the POST method for this page
             const sendAnswers = async (answerForm) => {
                 const answerAction = answerForm.getAttribute('action');
                 const answerMethod = answerForm.getAttribute('method');
+                //A for loop is created for the form data that is in x-www-form-urlencoded
                 let formData = ``;
                 let aFieldArray = [];
                 for(let i = 1; i <= 5; i++) {
@@ -53,8 +58,10 @@
 
                 handleResponse(response);
             };
+            //requestUpdate is the main function behind the GET method
             const requestUpdate = async (info) => {
                 let action;
+                //The parameter taken in is used as a filter/query to determine which data to obtain
                 if(info === 'question') {
                     action = '/getQuestions';
                 } else if(info === 'answer') {
@@ -64,12 +71,14 @@
                 let response = await fetch(action, {method, headers: { 'Accept': 'application/json' }});
                 handleResponse(response, method, action);
             };
+            //getData calls requestUpdate twice for question and answer data respectively
             const getData = (e) => {
                 e.preventDefault();
                 requestUpdate('question');
                 requestUpdate('answer');
                 return false;
             };
+            //init is called when the window loads
             const init = () => {
                 answerForm = document.querySelector('#answerForm');
                 const addAnswers = (e) => {

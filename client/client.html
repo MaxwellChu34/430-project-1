@@ -7,21 +7,24 @@
             /*The following Javascript is based off IGM-RichMedia-at-RIT/body-parse-example-done/client/client.html and /head-request-example-done/client/client.html. These two files were proficient examples as to how this HTML page can be interactive with the API server.*/
             let questionForm = document.querySelector('#questionForm');
             let jsonStringQ = [];
+            //handleResponse is able to receive the json object from both get and post requests
             const handleResponse = async (response, method, action) => {
                 const content = document.querySelector('#questionContent');
+                //For get requests, the page displays each question/answer if that json object isn't empty
                 if(method === 'get') {
                     let obj = await response.json();
                     if(action === '/getQuestions') {
                         if(obj["questions"]["undefined"] != null) {
+                            //An array is created for all 5 questions that stores all 5 "question" values and sets them as the default value of each input
                             for(let i = 1; i <= 5; i++) {
                                 jsonStringQ.push(JSON.parse(JSON.stringify(obj["questions"]["undefined"][`q${i}`])));
                                 questionForm.querySelector(`#qField${i}`).value = jsonStringQ[i - 1];
                             }
-                        }
+                        } //Since this is the form creation page, each updated question is displayed along with its list of all answer inputs.
                     } else if(action === '/getAnswers') {
                         if(obj["answers"]["undefined"] != null) {
                             content.innerHTML = `<p id="intro">Here are the results from completing the form:</p>`
-                            let jsonStringA = [];
+                            let jsonStringA = []; //Another array is formed just like with the questions, but it adds HTML to the display box on the right side of the page
                             for(let i = 1; i <= 5; i++) {
                                 jsonStringA.push(JSON.parse(JSON.stringify(obj["answers"]["undefined"][`a${i}`])));
                                 content.innerHTML += `<section id="results">
@@ -31,18 +34,20 @@
                             }
                         }
                     }
-                } else {
+                } else { //For post requests, if all inputs have been filled a link to the actual form is displayed on the page
                     const gotoForm = document.querySelector('#gotoForm');
                     if(response.status === 201 || response.status === 204) {
                         gotoForm.innerHTML = `<p>Click <a href="/createdForm">this link</a> to see the form.</p>`;
-                    } else {
+                    } else { //A text that tells the user to finish implementing is displayed if not
                         gotoForm.innerHTML = `<p>Please put something for all five questions.</p>`;
                     }
                 }
             };
+            //sendQuestions is the main function behind the POST method for this page
             const sendQuestions = async (questionForm) => {
                 const questionAction = questionForm.getAttribute('action');
                 const questionMethod = questionForm.getAttribute('method');
+                //A for loop is created for the form data that is in x-www-form-urlencoded
                 let formData = ``;
                 let qFieldArray = [];
                 for(let i = 1; i <= 5; i++) {
@@ -59,8 +64,10 @@
                 });
                 handleResponse(response);
             };
+            //requestUpdate is the main function behind the GET method
             const requestUpdate = async (info) => {
                 let action;
+                //The parameter taken in is used as a filter/query to determine which data to obtain
                 if(info === 'question') {
                     action = '/getQuestions';
                 } else if(info === 'answer') {
@@ -70,12 +77,14 @@
                 let response = await fetch(action, {method, headers: { 'Accept': 'application/json' }});
                 handleResponse(response, method, action);
             };
+            //getData calls requestUpdate twice for question and answer data respectively
             const getData = (e) => {
                 e.preventDefault();
                 requestUpdate('question');
                 requestUpdate('answer');
                 return false;
             };
+            //init is called when the window loads
             const init = () => {
                 questionForm = document.querySelector('#questionForm');
                 const addQuestions = (e) => {
