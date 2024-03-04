@@ -1,3 +1,5 @@
+/*The following Javascript was borrowed from IGM-RichMedia-at-RIT/body-parse/example-done/src/server.js. Additions were made so that the server can receive HEAD requests as well.*/
+
 const http = require('http');
 const url = require('url');
 const query = require('querystring');

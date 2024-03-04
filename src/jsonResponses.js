@@ -1,3 +1,5 @@
+/*The following Javascript was borrowed from IGM-RichMedia-at-RIT/body-parse-example-done/src/jsonResponses.js and /head-request-example-done/src/jsonResponses.js. Additions were made so that there are two separate json objects and the GET function having a filter.*/
+
 const questions = {};
 const answers = {};
 const headers = { 'Content-Type': 'application/json' };
