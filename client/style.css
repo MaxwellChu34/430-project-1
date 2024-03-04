@@ -8,7 +8,7 @@ body {
     column-gap: 20px;
 }
 
-h1, #qGroup, #gotoForm, #intro, #results {
+h1, #qGroup, #gotoForm, #intro, #results, #aGroup, #goBack, #answerContent {
     background-color: white;
     outline: solid lightgray 1px;
     margin-bottom: 20px;
@@ -16,18 +16,19 @@ h1, #qGroup, #gotoForm, #intro, #results {
     padding: 20px;
 }
 
-h1, #gotoForm {
+h1, #gotoForm, #goBack {
     border-top: solid indigo 10px;
     font-weight: lighter;
 }
 
-#qGroup:focus-within {
+#qGroup:focus-within, #aGroup:focus-within {
     border-left: solid dodgerblue 5px;
 }
 
 input[type=text] {
     width: 90%;
 }
+
 input[type=text]:hover, input[type=text]:focus {
     background-color: whitesmoke;
 }
@@ -43,12 +44,13 @@ input[type=submit]:hover {
     background-color: rebeccapurple;
     border: rebeccapurple;
 }
+
 input[type=submit]:active {
     background-color: mediumpurple;
     border: mediumpurple;
 }
 
-#gotoForm {
+#gotoForm, #goBack {
     margin-top: 20px;
     text-align: center;
     height: -5vw;
@@ -62,4 +64,10 @@ input[type=submit]:active {
     width: 0;
     margin: 0px;
     padding-bottom: 20px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
 }

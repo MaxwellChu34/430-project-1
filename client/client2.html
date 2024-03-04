@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Maxwell Chu IGME 430 Project 1</title>
+        <title>IGME 430 Project 1</title>
         <link rel="stylesheet" type="text/css" href="/style.css">
         <script>
             let answerForm = document.querySelector('#answerForm');
@@ -84,30 +84,49 @@
         </script>
     </head>
     <body>
-        <section id="Form">
-            <h1>Form:</h1>
-            <form id="answerForm" action="/addAnswers" method="post">
-                <label for="a1" id="label1"></label>
-                <input id="aField1" type="text" name="a1"/>
-                <br>
-                <label for="a2" id="label2"></label>
-                <input id="aField2" type="text" name="a2"/>
-                <br>
-                <label for="a3" id="label3"></label>
-                <input id="aField3" type="text" name="a3"/>
-                <br>
-                <label for="a4" id="label4"></label>
-                <input id="aField4" type="text" name="a4"/>
-                <br>
-                <label for="a5" id="label5"></label>
-                <input id="aField5" type="text" name="a5"/>
-                <br>
-                <input type="submit" value="Submit Answers!"/>
-            </form>
-        </section>
-        <section id="answerContent">
-        </section>
-        <section id="goBack">
-        </section>
+        <div class="grid-item">
+            <section id="Form">
+                <h1>Form:</h1>
+                <form id="answerForm" action="/addAnswers" method="post">
+                    <section id="aGroup">
+                        <label for="a1" id="label1"></label>
+                        <br>
+                        <input id="aField1" type="text" name="a1"/>
+                    </section>
+                    <section id="aGroup">
+                        <label for="a2" id="label2"></label>
+                        <br>
+                        <input id="aField2" type="text" name="a2"/>
+                    </section>
+                    <section id="aGroup">
+                        <label for="a3" id="label3"></label>
+                        <br>
+                        <input id="aField3" type="text" name="a3"/>
+                    </section>
+                    <section id="aGroup">
+                        <label for="a4" id="label4"></label>
+                        <br>
+                        <input id="aField4" type="text" name="a4"/>
+                    </section>
+                    <section id="aGroup">
+                        <label for="a5" id="label5"></label>
+                        <br>
+                        <input id="aField5" type="text" name="a5"/>
+                    </section>
+                    <input type="submit" value="Submit Answers!"/>
+                </form>
+            </section>
+        </div>
+        <div class="grid-item">
+            <section id="goBack">
+                <p>You can go back to edit the form once you have answered everything.</p>
+            </section>
+            <section id="answerContent">
+                <p>Your submitted results will display in this box.</p>
+            </section>
+        </div>
+        <footer>
+            <p>Made by Maxwell Chu</p>
+        </footer>
     </body>
 </html>
